@@ -36,4 +36,4 @@ mongoose.connection.on('error', (err: Error) => {
     process.exit(-1);
 });
 
-app.use('/', router()) 
+app.use('/api', router());

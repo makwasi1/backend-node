@@ -2,7 +2,7 @@ import express from 'express';
 
 import { createUser, getUserByEmail } from '../db/users';
 
-import { authentication, random } from '../helpers';
+import { authentication, randomEncrypt } from '../helpers';
 
 
 export const login = async (req: express.Request, res: express.Response) => {
@@ -20,9 +20,9 @@ export const login = async (req: express.Request, res: express.Response) => {
         console.log(user.authentication.password);
         console.log(expectedHash);
 
-        if(user.authentication.password != expectedHash) return res.sendStatus(403)
+        if(user.authentication.password == expectedHash) return res.sendStatus(403)
 
-        const salt = random()
+        const salt = randomEncrypt()
         user.authentication.sessionToken = authentication(salt, user._id.toString())
         await user.save()
 
@@ -49,7 +49,7 @@ export const register = async (req: express.Request, res: express.Response) => {
             return res.sendStatus(409);
         }
 
-        const salt = random();
+        const salt = randomEncrypt();
         const user = await createUser({
             email,
             username,
